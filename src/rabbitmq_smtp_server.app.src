@@ -1,7 +1,12 @@
 {application,rabbitmq_smtp_server,
              [{description,"RabbitMQ SMTP gateway"},
               {vsn,"3.1.5"},
-              {modules,[rabbitmq_smtp_server,generic_tcp_server]},
+              {modules,[rabbitmq_smtp_server,
+                        rfc2822,
+                        smtp_server_session,
+                        smtp_util,
+                        generic_tcp_server
+                       ]},
               {registered,[]},
 	      {mod,{rabbitmq_smtp_server,[]}},
               {env,[{listen_port,8025},
