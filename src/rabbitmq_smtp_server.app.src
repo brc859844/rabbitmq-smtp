@@ -1,7 +1,10 @@
 {application,rabbitmq_smtp_server,
              [{description,"RabbitMQ SMTP gateway"},
               {vsn,"3.1.5"},
-              {modules,[rabbitmq_smtp_server]},
+              {modules,[rabbitmq_smtp_server,generic_tcp_server]},
               {registered,[]},
+	      {mod,{rabbitmq_smtp_server,[]}},
+              {env,[{listen_port,8025},
+                    {listen_host,"localhost"}]},
               {applications,[kernel,stdlib]}]}.
 

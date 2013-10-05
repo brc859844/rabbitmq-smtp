@@ -35,10 +35,10 @@
 %% Callbacks.
 -export([delivery/3, verify_new_rcpt/2]).
 
-start(normal, []) ->
+start(_Type, _StartArgs) ->
     {ok, Host} = application:get_env(listen_host),
     {ok, Port} = application:get_env(listen_port),
-    io:format("starting SMTP listener        ..."),
+    rabbit_log:info("Starting SMTP listener~n"),
     R = generic_tcp_server:start_link(smtp_server_session, Host, Port,
 				  [list,
 				   {active, false},
@@ -46,8 +46,8 @@ start(normal, []) ->
 				   {reuseaddr, true}],
 				  [{?MODULE, delivery, []},
 				   {?MODULE, verify_new_rcpt, []}]),
-   io:format("done~n"),
-   R.
+   rabbit_log:info("SMTP listener started %p~n", [R]),
+   {ok, R}.
 
 stop(_State) ->
     ok.
