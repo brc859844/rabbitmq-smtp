@@ -46,8 +46,8 @@ start(_Type, _StartArgs) ->
 				   {reuseaddr, true}],
 				  [{?MODULE, delivery, []},
 				   {?MODULE, verify_new_rcpt, []}]),
-   rabbit_log:info("SMTP listener started %p~n", [R]),
-   {ok, R}.
+   rabbit_log:info("SMTP listener started~n"),
+   R.
 
 stop(_State) ->
     ok.
