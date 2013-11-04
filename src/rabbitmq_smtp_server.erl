@@ -100,23 +100,21 @@ delivery(_ReversePath, ForwardPaths, DataLines) ->
 			     #'P_basic'{headers = []},
 			     Headers),
     Content = rabbit_basic:build_content(Properties, list_to_binary(BodyLines)),
-    deliver(ok, ForwardPaths, #basic_message{content = Content}).
+    deliver(ok, ForwardPaths, Content).
 
-deliver(Status, [], _Message) ->
+deliver(Status, [], _Content) ->
     Status;
-deliver(Status, [Path | Rest], Message) ->
+deliver(Status, [Path | Rest], Content) ->
     case map_mailbox(Path) of
         {ok, XName, RK} ->
-            case rabbit_basic:publish(
-                   rabbit_basic:delivery(false, false, none,
-                                         Message#basic_message{exchange_name = XName,
-                                                               routing_keys = [RK]},
-                                         undefined)) of
-                {ok, _, _} -> deliver(Status, Rest, Message);
-                _ -> deliver(one_or_more_deliveries_failed, Rest, Message)
+            {ok, Msg} = rabbit_basic:message(XName, RK, Content),
+            Delivery = rabbit_basic:delivery(false, Msg, none),
+            case rabbit_basic:publish(Delivery) of
+                {ok, _, _} -> deliver(Status, Rest, Content);
+                _ -> deliver(one_or_more_deliveries_failed, Rest, Content) 
             end;
         not_found ->
-            deliver(one_or_more_deliveries_failed, Rest, Message)
+            deliver(one_or_more_deliveries_failed, Rest, Content)
     end.
 
 add_header({Key, Value}, P = #'P_basic'{headers = H}) ->

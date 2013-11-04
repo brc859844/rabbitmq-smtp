@@ -10,6 +10,8 @@
               {registered,[]},
 	      {mod,{rabbitmq_smtp_server,[]}},
               {env,[{listen_port,8025},
-                    {listen_host,"localhost"}]},
+                    {listen_host,"localhost"},
+                    {vhost_map, [{"localhost", <<"/">>}]},
+                    {default_vhosts, true}]},
               {applications,[kernel,stdlib]}]}.
 
