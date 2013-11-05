@@ -183,7 +183,6 @@ handle_data_line(".\r\n", State = #session{reverse_path = ReversePath,
 		       ok -> {250, "OK"};
 		       _ -> {554, "Transaction failed"}
 		   end,
-%% TBD - seems to be a bad cast lurking here (BRC)
     {noreply, reply(Code, Text,
 		    reset_buffers(State#session{mode = command}))};
 
